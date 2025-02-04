@@ -1,0 +1,43 @@
+﻿@using Telerik.ReportViewer.Mvc;
+@using Telerik.Reporting;
+
+@model TelerikReportingMVC5.ViewModels.IndexViewModel
+
+@{
+    ViewBag.Title = "Home Page";
+
+    UriReportSource reportSource = new UriReportSource()
+    {
+        Uri = "Report1.trdp"
+    };
+
+    reportSource.Parameters.Add("JoinedSince", Model.JoinedSince);
+}
+
+<main>
+    <div class="row">
+        <div class="col-md-8">
+            <label>Filter by joined since date: </label>
+            @Html.TextBoxFor(x => x.JoinedSince, "{0:MM/dd/yyyy}", new { @class = "form-control", @readonly = "readonly" })
+        </div>
+        <div class="col-md-4">
+            <button id="btnRefresh" class="btn btn-primary">Refresh</button>
+        </div>
+    </div>
+    @(Html.TelerikReporting().ReportViewer()
+       .Id("reportViewer")
+       .ServiceUrl("/api/reports/")
+       //.TemplateUrl("/ReportViewer/templates/telerikReportViewerTemplate.html")
+       .ReportSource(reportSource)
+       .ViewMode(ViewMode.Interactive)
+       .ScaleMode(ScaleMode.Specific)
+       .Scale(1.0)
+       .PersistSession(false)
+       .EnableAccessibility(false)
+       .Deferred())
+</main>
+
+@section scripts {
+    <script src="~/Scripts/index.js"></script>
+    @Html.TelerikReporting().DeferredScripts()
+}
